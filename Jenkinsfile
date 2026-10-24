@@ -1,51 +1,25 @@
 pipeline {
-    agent any // Specifies that the pipeline can run on any available agent
-
-    options {
-      skipStagesAfterUnstable()
-    }
-
-    tools {
-         maven '3.9.11'
-    }
-
+    agent any
     stages {
-        stage('Checkout Source Code') {
+        stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/kevinli-webbertech/gs-spring-boot.git' 
+                checkout scm
             }
         }
-
         stage('Test') {
             steps {
-                sh 'git --version'
-                sh 'mvn --version'
-                sh 'mvn clean test' // Example for a Maven project
+                sh 'mvn test'
             }
         }
-
-        stage('Build and Package') {
+        stage('Build') {
             steps {
                 sh 'mvn clean package -DskipTests'
             }
         }
-
-        stage('Archive Artifacts') {
+        stage('Archive') {
             steps {
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
-        }
-    }
-
-    post {
-        always {
-            echo 'Pipeline finished.'
-        }
-        success {
-            echo 'Build successful!'
-        }
-        failure {
-            echo 'Build failed!'
         }
     }
 }
