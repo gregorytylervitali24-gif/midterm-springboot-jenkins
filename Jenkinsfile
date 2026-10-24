@@ -1,11 +1,9 @@
 pipeline {
     agent any
+    tools {
+        maven '3.9.11'
+    }
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
         stage('Test') {
             steps {
                 sh 'mvn test'
@@ -23,5 +21,6 @@ pipeline {
         }
     }
 }
+
 
 
